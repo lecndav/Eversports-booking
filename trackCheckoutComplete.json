@@ -1,0 +1,5 @@
+{
+    "operationName": "trackCheckoutComplete",
+    "query": "mutation trackCheckoutComplete($orderId: ID!, $deviceId: String!, $sessionId: Float!, $userTrackingId: String) {\n  trackCheckoutComplete(orderId: $orderId, deviceId: $deviceId, sessionId: $sessionId, userTrackingId: $userTrackingId)\n}",
+    "variables": {}
+}
