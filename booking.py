@@ -4,7 +4,7 @@ import requests
 from datetime import date, timedelta
 
 API = 'https://mobile.eversports.io'
-CHECKOUT_API = 'https://checkout.eversports.io'
+CHECKOUT_API = 'https://checkout.eversports.io/v1'
 
 
 def create_cart(req, deviceId, uuid):
@@ -14,7 +14,7 @@ def create_cart(req, deviceId, uuid):
 
     data['variables']['bookableItemId'] = uuid
     data['variables']['deviceId'] = deviceId
-    ret = req.post(f'{CHECKOUT_API}/v1', data=json.dumps(data))
+    ret = req.post(CHECKOUT_API, data=json.dumps(data))
     if ret.status_code != 200:
         sys.exit(1)
     j = ret.json()
@@ -30,7 +30,7 @@ def set_product(req, membershipId, cartId, itemId):
     data['variables']['cartId'] = cartId
     data['variables']['itemId'] = itemId
     data['variables']['productId'] = membershipId
-    ret = req.post(f'{CHECKOUT_API}/v1', data=json.dumps(data))
+    ret = req.post(CHECKOUT_API, data=json.dumps(data))
     if ret.status_code != 200:
         sys.exit(1)
 
@@ -41,7 +41,7 @@ def create_order(req, cartId):
         data = json.loads(f.read())
 
     data['variables']['cartId'] = cartId
-    ret = req.post(f'{CHECKOUT_API}/v1', data=json.dumps(data))
+    ret = req.post(CHECKOUT_API, data=json.dumps(data))
     if ret.status_code != 200:
         sys.exit(1)
     return ret.json()['data']['createOrderFromCart']['id']
@@ -54,7 +54,7 @@ def chekout_compelete(req, deviceId, orderId):
 
     data['variables']['orderId'] = orderId
     data['variables']['deviceId'] = deviceId
-    ret = req.post(f'{CHECKOUT_API}/v1', data=json.dumps(data))
+    ret = req.post(CHECKOUT_API, data=json.dumps(data))
     if ret.status_code != 200:
         sys.exit(1)
 
@@ -66,7 +66,7 @@ def get_next_class(classes: dict, date):
 
 
 def get_class_uuid(req, classs: dict):
-    ret = req.get(f'{API}/v24/event-session/{classs["sessionId"]}')
+    ret = req.get(API + '/v24/event-session/' + classs['sessionId'])
     if ret.status_code != 200:
         sys.exit(1)
     return ret.json()['uuid']
@@ -74,7 +74,7 @@ def get_class_uuid(req, classs: dict):
 
 def get_classes(req, facilityId, date):
     data = {'limit': 30, 'offset': 0, 'startDate': date, 'type': 'class'}
-    ret = req.get(f'{API}/v24/facility/{facilityId}/event-sessions',
+    ret = req.get(API + '/v24/facility/ ' + str(facilityId) + '/event-sessions',
                   params=data)
     if ret.status_code != 200:
         sys.exit(1)
