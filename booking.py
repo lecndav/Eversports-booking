@@ -7,7 +7,7 @@ API = 'https://mobile.eversports.io'
 CHECKOUT_API = 'https://checkout.eversports.io'
 
 
-def create_cart(req, deviceId: str, uuid: str):
+def create_cart(req, deviceId, uuid):
     req.headers['X-Apollo-Operation-Name'] = 'CreateCartFromEventBookableItem'
     with open('CreateCartFromEventBookableItem.json') as f:
         data = json.loads(f.read())
@@ -22,7 +22,7 @@ def create_cart(req, deviceId: str, uuid: str):
         'createCartFromEventBookableItem']['items'][0]['id']
 
 
-def set_product(req, membershipId: str, cartId: str, itemId: str):
+def set_product(req, membershipId, cartId, itemId):
     req.headers['X-Apollo-Operation-Name'] = 'setProductForCartItem'
     with open('setProductForCartItem.json') as f:
         data = json.loads(f.read())
@@ -35,7 +35,7 @@ def set_product(req, membershipId: str, cartId: str, itemId: str):
         sys.exit(1)
 
 
-def create_order(req, cartId: str):
+def create_order(req, cartId):
     req.headers['X-Apollo-Operation-Name'] = 'ceateOrderFromCart'
     with open('ceateOrderFromCart.json') as f:
         data = json.loads(f.read())
@@ -47,7 +47,7 @@ def create_order(req, cartId: str):
     return ret.json()['data']['createOrderFromCart']['id']
 
 
-def chekout_compelete(req, deviceId: str, orderId: str):
+def chekout_compelete(req, deviceId, orderId):
     req.headers['X-Apollo-Operation-Name'] = 'trackCheckoutComplete'
     with open('trackCheckoutComplete.json') as f:
         data = json.loads(f.read())
@@ -59,7 +59,7 @@ def chekout_compelete(req, deviceId: str, orderId: str):
         sys.exit(1)
 
 
-def get_next_class(classes: dict, date: str):
+def get_next_class(classes: dict, date):
     for c in classes:
         if c['start'] == f'{date} 06:15':
             return c
@@ -72,7 +72,7 @@ def get_class_uuid(req, classs: dict):
     return ret.json()['uuid']
 
 
-def get_classes(req, facilityId: str, date: str):
+def get_classes(req, facilityId, date):
     data = {'limit': 30, 'offset': 0, 'startDate': date, 'type': 'class'}
     ret = req.get(f'{API}/v24/facility/{facilityId}/event-sessions',
                   params=data)
@@ -81,7 +81,7 @@ def get_classes(req, facilityId: str, date: str):
     return ret.json()
 
 
-def book_next_class(req, deviceId: str, facilityId: str, membershipId: str):
+def book_next_class(req, deviceId, facilityId, membershipId):
     today = date.today()
     date_str = today.strftime('%Y-%m-%d')
     classes = get_classes(req, facilityId, date_str)
