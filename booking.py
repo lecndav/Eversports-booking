@@ -59,13 +59,13 @@ def chekout_compelete(req, deviceId, orderId):
         sys.exit(1)
 
 
-def get_next_class(classes: dict, date):
+def get_next_class(classes, date):
     for c in classes:
-        if c['start'] == f'{date} 06:15':
+        if c['start'] == date + ' 06:15':
             return c
 
 
-def get_class_uuid(req, classs: dict):
+def get_class_uuid(req, classs):
     ret = req.get(API + '/v24/event-session/' + classs['sessionId'])
     if ret.status_code != 200:
         sys.exit(1)
@@ -100,7 +100,7 @@ def main():
         creds = json.loads(f.read())
 
     req = requests.session()
-    req.headers['Authorization'] = f'Bearer {creds["token"]}'
+    req.headers['Authorization'] = 'Bearer ' + creds['token']
     req.headers['Content-Type'] = 'application/json'
 
     with open('days.json') as f:
