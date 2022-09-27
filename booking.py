@@ -1,15 +1,17 @@
 import json
 import sys
 import requests
+import os
 from datetime import date, timedelta
 
 API = 'https://mobile.eversports.io'
 CHECKOUT_API = 'https://checkout.eversports.io/v1'
 
+DIR=os.path.dirname(os.path.realpath(__file__))
 
 def create_cart(req, deviceId, uuid):
     req.headers['X-Apollo-Operation-Name'] = 'CreateCartFromEventBookableItem'
-    with open('CreateCartFromEventBookableItem.json') as f:
+    with open(DIR + '/CreateCartFromEventBookableItem.json') as f:
         data = json.loads(f.read())
 
     data['variables']['bookableItemId'] = uuid
@@ -24,7 +26,7 @@ def create_cart(req, deviceId, uuid):
 
 def set_product(req, membershipId, cartId, itemId):
     req.headers['X-Apollo-Operation-Name'] = 'setProductForCartItem'
-    with open('setProductForCartItem.json') as f:
+    with open(DIR + '/setProductForCartItem.json') as f:
         data = json.loads(f.read())
 
     data['variables']['cartId'] = cartId
@@ -37,7 +39,7 @@ def set_product(req, membershipId, cartId, itemId):
 
 def create_order(req, cartId):
     req.headers['X-Apollo-Operation-Name'] = 'ceateOrderFromCart'
-    with open('ceateOrderFromCart.json') as f:
+    with open(DIR + '/ceateOrderFromCart.json') as f:
         data = json.loads(f.read())
 
     data['variables']['cartId'] = cartId
@@ -49,7 +51,7 @@ def create_order(req, cartId):
 
 def chekout_compelete(req, deviceId, orderId):
     req.headers['X-Apollo-Operation-Name'] = 'trackCheckoutComplete'
-    with open('trackCheckoutComplete.json') as f:
+    with open(DIR + '/trackCheckoutComplete.json') as f:
         data = json.loads(f.read())
 
     data['variables']['orderId'] = orderId
@@ -96,7 +98,7 @@ def book_next_class(req, deviceId, facilityId, membershipId):
 
 
 def main():
-    with open('credentials.json') as f:
+    with open(DIR + '/credentials.json') as f:
         creds = json.loads(f.read())
 
     req = requests.session()
